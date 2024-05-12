@@ -1,0 +1,515 @@
+Passo a passo de execução do processo!
+
+Metodo que uso para aprendizagem onde descrevo meu entendimento de cada passo do 
+projeto.
+
+____________________________________________________________ Manuipulação do Dom JavaScript _______________________________________________________________________________________
+
+Nesse projeto recebemos arquivos HTML e CSS ja prontos para criarmos o Js do zero.
+
+01- Identificando os botões:  Foco - Descanso curto - Descanso longo, para identificarmos os botões vamos no HTML e conferimos que são tags de tiposbutons, após vamos no console e 
+digitamos o codigo abaixo que nos retorna em forma de lista todos os elementos com as tags do tipo button.
+
+- document.querySelectorAll('button') __
+
+
+
+02- Depois analisando o figma e vimos que temos 3 paginas cada uma com cores, imagens e textos diferente correnspondente a cada parte do método pomodoro, a usar o live server vimos 
+que a pagina inicial se trata da pagina onde temos o botão foco selecionado e no HTML -Linha 2- dentro da tag <html> temos o atirbuto: -data-contexto="foco"- que seleciona 
+inicialmente a tela do botão foco, já no CSS -Linhas 10, 14 e 18- temos as estilizalções dos atributos foco, descanso-curto e descanso-longo que mudão a cor de fundo de todo HTML.
+
+
+
+03- Agora criamos um arquivo JavaScripit para realizar as iterações que a pagina precisa, e criamos a referencia script no nosso head, porem para que a referencia fique no head 
+precisamos usa o atributo -defer- que ao executar o html deixa para executar o script por ultimo quando ele ja percorreu todos os atributos do HTML. 
+
+__ <script src="script.js" defer ></script> __
+
+
+
+04- No arquivo java scripit usaremos o __ document.querySelector __ para armazenarmos a referencia do HTML -Linha 2- com um atributo especial -data-contexto- e para armazenar 
+tambem a referencia dos botões  de -foco- ,  -descanso-curto- e -descanso-longo- 
+
+1 → const html = document.querySelector('html') → encontra a referencia do html e armazena na const
+2 → const focoBt = document.querySelector('.app__card-button--foco') → encontra a referenciado botão e armazena na const
+3 → const curtoBt = document.querySelector('.app__card-button--curto') → encontra a referenciado botão e armazena na const
+4 → const longoBt = document.querySelector('.app__card-button--longo') → encontra a referenciado botão e armazena na const
+
+
+
+05- Depois utilizamos as const do botões com o atributo -.addEventListener- (passamos dois elementos, o 1° o evento que chamara o atributo e 2º a função que chmaremos), no segundo 
+elemento do -addEventListener-  criaremos -arrows functions- com o atributo  -.setAttribute- (nos elementos, 1° é o elemento a ser mudado e o 2° é o valor novo do elemento) assim
+quando clicamos nos botões mudamos no html o valor do -data-contexto- -Linha 2-.
+
+1 → focoBt.addEventListener('click', () => {html.setAttribute('data-contexto', 'foco')})
+2 → curtoBt.addEventListener('click', () => {html.setAttribute('data-contexto', 'descanso-curto')})
+3 → longoBt.addEventListener('click', () => {html.setAttribute('data-contexto', 'descanso-longo')})
+
+Teste e veja que a cor do fundo se altera agora a cada botão clicado.
+
+
+
+06- Agora trocaremos as imagens de fundo, primeiro no nosso HTML identificamos a imagem do baner focus e identificamos sua classe -Linha 34- depois armazenamos sua posição em uma 
+const atravez da sua classe.
+
+-const banner = document.querySelector('.app__image')- 
+ 
+ 
+após usamos -setAttribute- para trocar o indereço das imagens e adicionamos dentro das funçôes chamadas pelos -addEventListener-, o codigo sera refatorado para ver esse passo veja
+o passo 7;
+1 → banner.setAttribute('src', '/imagens/foco.png')
+2 → banner.setAttribute('src', '/imagens/descanso-curto.png')
+3 → banner.setAttribute('src', '/imagens/descanso-longo.png')
+Teste e veja que nosso codigo funciona.
+
+
+
+07_ O codigo esta funcionando mas esta ficando com muitas repetições, vendo isso ja é possivel fazer uma refatoração do codigo
+
+_______________________-addEventListener- Antes de refatorar_______________________
+focoBt.addEventListener('click', () => {
+    html.setAttribute('data-contexto', 'foco')
+    banner.setAttribute('src', '/imagens/foco.png')
+})
+
+curtoBt.addEventListener('click', () => {
+    html.setAttribute('data-contexto', 'descanso-curto')
+    banner.setAttribute('src', '/imagens/descanso-curto.png')
+})
+
+longoBt.addEventListener('click', () => {
+    html.setAttribute('data-contexto', 'descanso-longo')
+    banner.setAttribute('src', '/imagens/descanso-longo.png')
+})
+
+
+Refatorando
+
+Criamos uma função com o nome de -alterarContexto()- e passamos dentro do seu parentese a palavra -contexto- que didaticamentenos nos fala que a ideia é passar o nome do contexto mas 
+tambem que devemos passar algum valor no seu elemento quando chamamos a função, ja dentro da função  chamamos na -const html- com o atributo -.setAttribute- para realizar a troca do
+valor do -data-contexo-
+
+-html.setAttribute('data-contexto', contexto)-
+
+
+Ainda dentro da função usaremos a -const banner- para trocarmos o caminho da imagem, chamamos a -const banner- com o atributo -setAttribute-, dentro do seu elemento passamos parte 
+do caminho da imagem e uma -templateString- para modificar o caminho da imagem dinamicamente, OBS: observe na pasta imagens no explorador de arquivos que o nome da imagem e do 
+contexto são os mesmo, mudando apenas o final do nome que tem a extenção do arquivo de imagem  -.png-  
+
+__ banner.setAttribute('src', `/imagens/${contexto}.png`) __ 
+
+
+Agora com a função pronta vamos modificar os -addEventListener- de cada botão para chamar a função comforme apertamos os botões focoBt, curtoBt e longoBt. E no elemento da função
+passamos o nome de cada contexto.
+
+→ focoBt.addEventListener('click', () => {alterarContexto('foco')})
+→ curtoBt.addEventListener('click', () => {alterarContexto('descanso-curto')})
+→ longoBt.addEventListener('click', () => {alterarContexto('descanso-longo')})
+
+
+
+
+08- Precisamos tambem ao trocar o contexto mudar o texto principal de cada pagina, vamos identificar no HTML onde o texto esta sendo passado -Linhas 29,30 e 31- e vamos armazenar 
+essa refencia do html em uma const atravez da classe
+
+-const titulo = document.querySelector('.app__title')-
+
+
+Com a referencia feita dentro da função -alterarContexto(contexto)- vamos usar a estrutura switch, que se trata de uma extrutura que compara o elemento passado quando chamada
+com a expressão -case- em seu interior, sendo o elemento passado igual a -case- executamos o codigo dentro da -case- com o valor igual a do elemento que foi passado.
+
+Como nós temos 3 telas com 3 textos, teremos 3 cases na switch, dentro de cada case executara um atributo -.innerHtml- (acessa e modifica o conteúdo HTML do elemento) mudando o texto
+
+switch (contexto) {
+    case "foco":titulo.innerHTML = ` Otimize sua produtividade,<br><strong class="app__title-strong">mergulhe no que importa.</strong>`
+        break;
+    case "descanso-curto":titulo.innerHTML = `Que tal dar uma respirada? <strong class="app__title-strong">Faça uma pausa curta!</strong>` 
+        break;
+    case "descanso-longo":titulo.innerHTML = `Hora de voltar à superfície.<strong class="app__title-strong"> Faça uma pausa longa.</strong>`
+        break;
+    default:
+}
+
+
+
+09- Para alteração dos botões, analisando o HTML -Linha 39 a 49- temos uma lista com os 3 botões onde os 3 possuem a classe -app__card-button- em comum, repare que apenas o botão
+-foco-  tem a classe  -active- , já no CSS  -Linha 112-  vemos as alterações que classe faz no botão justificando a diferença do botão -foco dos demais, apertando os botão precisamos
+adicionar a classe  -active-  no botão selecionado e remover dos demais, para isso vamos seguir 3 passos.
+
+ 1 → criar uma const para armazenar uma lista com os 3 botões que possuem a mesma classe em comum
+ 
+-const botoes = document.querySelectorAll('.app__card-button')-
+
+
+2 → Em cada  -addEventListener-  dos botões  -foco-  ,  -descanso-curto-  e  -descanso-longo-   adicionamos a classe  -active-  nos botões utilizando o  -.classList.add('active')-
+
+__ focoBt.addEventListener('click', () => {alterarContexto('foco')focoBt.classList.add('active')}) __
+__ curtoBt.addEventListener('click', () => {alterarContexto('descanso-curto')curtoBt.classList.add('active')}) __
+__ longoBt.addEventListener('click', () => {alterarContexto('descanso-longo')longoBt.classList.add('active')}) __
+
+
+3 → Dentro da função  -function alterarContexto(contexto)-  chamamos a  -const botoes-  com o atributo  -.forEach (percorre cada item do seu elemento)- , no elemento do -forEach- 
+criaremos outra função e nessa função passaremos  no seu elemento o -contexto- ja na suas chaves passaremos o  -contexto- com os atributos  -classList.remove(remove a classe)- e
+no elemento do -.remove()- passamos a classe -active-, para removermos a classe do botão
+
+ __ botoes.forEach(function (contexto) {contexto.classList.remove('active') }) __
+
+Obs:Executando a função  -alterarContexto-  removemos a classe  -active-   dos tres botões, mas nos  -addEventListener-  de cada botão, primeiro chamamos a função  -alterarContexto- 
+que ao ser executada remove a classe  -.active-  dos botões e depois executamos o  -.classList.add()-  adicionando a classe somente no botão que foi clicado.
+
+
+
+
+10- Analisando nosso projeto temos uma check box que inicia uma musica, no HTML  -Linhas 53 a 56-  temos uma label que possui a input checkbox, já no arquivo CSS  -Linhas 180 a 230-  
+temos a estilização do checkbox para o tipo toggle, essa estilização é mais complexa e deve ser estudada a parte. Será necessario 3 passos para a reprodução da musica.
+
+1 → Criar a const  -musicaFocoInput-  para reverencia nossa input do tipo checkbox no HTML atravez do id -alternar-musica"-.
+
+-const musicaFocoInput = document.querySelector('#alternar-musica')-
+
+
+2 → Criar uma const  -const musica-  com o elemento new Audio, que cria um objeto do tipo audio, em seu elemento passamos o caminho do arquivo de audio, precisamos do arquivo de 
+audio  -luna-rise-part-one.mp3-
+
+-const musica = new Audio('sons/luna-rise-part-one.mp3')-
+
+
+3 → Agora chamaremos a const -musicaFocoInput-  com o atributo  -addEventListener- e em seus dois elementos passaremos, no 1º o evento  -chage- que identifica quando o estado do
+-cherckbox-  muda e no 2º criaremos uma  -functioArrow-  com um condicionador  -if-  e  -else-   ,no  -if-  a const  -musica-  tem o atributo  -paused-  em seu elemento, esse
+atributo identifica se o arquivo de audio esta pausado, nas chave do  -if-  passamos a const  -musica-  com o atributo  -play()-  que inicia o arquivo de audio, no else passaremos
+a const  -muscia-  com o atributo  -pause-  , Ou seja se musica esta pausada damos o play e se não pausamos a musica.
+
+musicaFocoInput.addEventListener('change', () => {
+    if(musica.paused) {musica.play()} 
+    else {musica.pause()}
+})
+
+
+
+11- Para criar o temporizador precisamos declarar duas variaveis do tipo let  -tempoDecorridoEmSegundos-  que armazena o tempo total do temporizador nessa let passaremos com valor
+um numero que representa o tempo em milissegundos e a let  -intervaloId-  que armazena a execução do evento de repetição para decrementar o tempo do temporizador e passaremos o valor
+-null-  nulo que siguinifica que o evento não esta acontecendo,  tambem precisaremos declarar uma variavel tipo const  -startPauseBt-  que armazena a referencia do botão no HTML que 
+inicia e pausa o temporizador.
+
+→ let tempoDecorridoEmSegundos = 1500
+→ let intervaloId = null
+→ const startPauseBt = document.querySelector('#start-pause')
+
+
+Agora precisamos de tres funções para o funcionamento do temporizador
+
+1ª - realiza o decremento do tempo total do temporizador armazenado na let  -tempoDecorridoEmSegundos-
+2ª - que controla quando a execução do decremento acontece e armazena a execução desse controle na let  -intervaloId-
+3ª - para limpar o valor amazenado na let de controle de execução -intervaloId-
+
+1ª função de decremento do tempo total, passaremos em seu interior um  -if-  e um  -else-  o  -if-  confere se o tempo para ser decrementado  -tempoDecorridoEmSegundos-  é menor que 
+zero, isso nos garante que a função não execute com valores negativos de tempo, se for menor que zero o  _if-  chama a função que limpa o elemento de controle  -zerar()-  e passa um 
+alert informando que o tempo foi finalizado, se não for menor que zero no  -else-  chamamos a let  -tempoDecorridoEmSegundos-  com o operador  -( -= )-  menos igual, esse operador
+faz a expreção ( meu valor menos valor passado), junto do valor 1 que vai ser decrementado a cada execução da função -contagemRegressiva()- 
+
+
+
+function contagemRegressiva () {
+    if(tempoDecorridoEmSegundos <= 0){
+        zerar()
+        alert('Tempo finalizado!')
+    }
+    else{
+        tempoDecorridoEmSegundos -= 1
+        console.log('Temporizador: ' + tempoDecorridoEmSegundos) // concatenação
+    }
+}
+
+
+2ª função  -iniciarOuPausar()-  tem nosso objeto de controle para controlar a execução da primeira função que decrementa o tempo, dentro dessa função teremos um  -if-  e um  -else- ,
+no  -if-  passaremos em seu elemento a let  -intervaloId-e em suas chaves passaremos a função  -zerar()-  , quando passamos um elemento dessa forma o  -if-  confere se o valor  é 
+verdadeiro(difenrente de zero) e executa o -if-  quando o valor for verdadeiro, quando o valor do  -intervaloId-  for  -null(nulo ou 0)-  executaremos o  -else- , dentro do  -else-  
+chamamos a let -intervaloId- com o atributo  -setInterval-(repete o 1º elemento continuamente no intervalo de tempo passado no 2º elemento) com dois elementos, o 1º sera a função a 
+ser executada e o 2º sera o intervalo de tempo para repetir a função do primeiro elemento.
+Se  o  -setInterval()-  estiver em execução o valor do  -intervaloId-  é verdadeiro e quando não estar seu valor e nulo ou zero
+
+
+function iniciarOuPausar() {
+    if(intervaloId){
+        zerar()
+    }
+    else{
+    intervaloId = setInterval(contagemRegressiva, 1000)
+    }
+}
+
+
+3ª função  -zerar()-  tem objetivo pausar o  -setInterval-  da segunda função ou seja de zerar/limpar o  -intervaloId-  , para isso dentro da função  -zerar()-  chamamos o atributo
+-clearInterval-( metodo de pause do -setInterval- )  e dentro do seu elemento passamos o  -intervaloId-  , assim sempre que chamada a função zera o valor do  -intervaloId- pausando
+a execução.
+
+function zerar() {
+    clearInterval(intervaloId) 
+    intervaloId = null
+}
+
+
+Agora com a tres funções prontas usaremos chamamos a const do botão  -startPauseBt-  com o atributo  -addEventListener- com dois elementos, o 1º o evento a ser detectado  -click-  
+e o 2º a função a ser chamada.
+
+__ startPauseBt.addEventListener('click', iniciarOuPausar) __
+
+
+O funcionamento acontece da seguinte forma, ao clicar no botão -startPauseBt- o mesmo chama a função de controle (2ª função)  -function iniciarOuPausar()-  essa função compara se a 
+tag de controle  -intervaloId-  tem algum valor verdadeiro ( diferente de zero ), não encontrando algum valor verdadeiro ela executa o  -else-  que atribui o  -setInterval-  a tag 
+-intervaloId-   executando a função  -contagemRegressiva- (1ª função) a cada 1000 milissegundos, agora a função  -contagemRegressiva-  executa a cada 1000 milissegundos e a cada 
+execução ela compara se o valor do contador  -tempoDecorridoEmSegundos-  é menor que zero, se menor que zero o  -if-  da função (1ª função) chama a função  -zera()- (3ª função),
+ não sendo menor que zero ele executa o  -else-  decrementando 1 do valor de  -tempoDecorridoEmSegundos-  assim a função se repete até que o valor do contador seja menor que zero. 
+Quando o valor do contador for menor que zero a função -zera()-(3ª função) é chamada no  -if-  ,ao ser executada a função  -zera()-  usa o atributo -clearInterval- para zerar o valor
+ -intervaloId- parando o contador.
+
+Se apertarmos o botão -startPauseBt- com o contador funcionando ao entrar na função -iniciarOuPausar- encontra o valor do intervaloId verdadeiro e executa o if da função que chama a 
+função-zera()- pausando o contador.
+
+
+
+
+12- No explorador na pasta sons temos 3 arquivos de audio não usados, -play.wav- para o start do contador,  -pause.mp3-  para pausar o contador e o -beep.mp3-  para quando o contador
+terminar de contar seu tempo, então precisamos tambem executar esses audios no momento certo, temos que declarar uma const para reverenciar cada arquivo de audio, em cada const vamos
+utilizar o atributo  -new Audio()- e em seu elemento passaremos o caminho dos arquivos
+
+→ const audioPlay = new Audio('/sons/play.wav');     
+→ const audioPausa = new Audio('/sons/pause.mp3');       
+→ const audioTempoFinalizado = new Audio('./sons/beep.mp3')    
+
+
+Com as referencias de audio criadas precisamos executar os arquivos de audio no momento certo, na função  -iniciarOuPausar-  onde iniciamos e pausamos o contador vamos acrecentar as
+const -audioPlay-  e  -audioPause- com atributo  -.play()-, sendo o pause no  -if-  que é executado quando o contador já esta funcionando e no  -else-  colocaremos play já que o 
+-else-  é executado quando quando o contador esta pausado
+
+function iniciarOuPausar() { //11
+    if(intervaloId){
+        audioPausa.play()
+        zerar()
+    }
+    else{
+        audioPlay.play()
+        intervaloId = setInterval(contagemRegressiva, 1000)
+        iniciarOuPausarBt.textContent = "Pausar"
+    }
+}
+
+
+A função  -contagemRegressiva-  é responsavel por identifcar que o contador acabou, nela então chamamos a const  -audioTempoFinalizado-  com o atributo -play() em seu  -if-  que é
+executado quando o contador tem seu valor menor que zero que siguinifica que o tempo acabou.
+
+function contagemRegressiva () { //11
+    if(tempoDecorridoEmSegundos <= 0){
+        audioTempoFinalizado.play() 
+       alert('Tempo finalizado!')
+       zerar() 
+    } 
+}
+
+
+
+13- Agora trocaremos o texto do botão Começar, quando iniciamos o contador ele deve mudar para pausar e quando pausamos mudar para começar. Para isso vamos identificar o local do 
+nosso botão no HTML  -Linha 65 a 68-  e revencia-lo na const  -iniciarOuPausarBt-  . Note que usamos o id do botão mais a tag span passando a localização exata do texto da div do 
+botão
+
+-const iniciarOuPausarBt = document.querySelector('#start-pause span')-
+
+
+Agora utilizando o método -textContent(metodo usado para substituir textos)- , na função  -iniciarOuPausar- chamaremos  a const do  -iniciarOuPausarBt-  com o atributo -textContent-
+e atribuimos o novo texto a ser passado para a const. No  -if-  responsavel por parar o contador passaremos o texto  -Começar-  no  -else-  que incia o contador colocaremos -Pausar_
+
+function iniciarOuPausar() { //11
+    if(intervaloId){
+        audioPausa.play()  //12
+        iniciarOuPausarBt.textContent = "Começar" //13
+        zerar()
+    }
+    else{
+        audioPlay.play() //12
+        intervaloId = setInterval(contagemRegressiva, 1000)
+        iniciarOuPausarBt.textContent = "Pausar" //13
+    }
+}
+
+
+
+14- Precisamos exibir o temporizador na tela, e ja temos a logica pronta para controle do mesmo, analisando nosso figma podemos ver que nosso temporizador fica abaixo do botões de
+-foco- ,  -descanso curto-  e  -descanso longo- , no nosso HTML  -Linha 50-  podemos identificar a  -<div>-  responsavel pelo tempo, com isso podemos criar nossa const que vai 
+reverenciar essa div no nosso JavaScripit utilizando seu id.
+
+-const tempoNaTela = document.querySelector('#timer')-
+
+
+Para exibir o contador na tela precisamos da formatação adequanda dos numeros em formato de minmutos e segundos, para isso criaremos uma função  -mostrarTempo()-  que utilizara O
+metodo  -new date()-  , esse metodo recebe valores em seu elemento e nos retorna em formato de data, os segundos estão dentro de minutos que estão dentro de horas, que estão dentor 
+de dias, que estão dentro demeses, que estão dentro anos, tratando então esse dados podemos extrair somente os minutos e segundos  que queremos para exibir no contador, a função tem 
+3 etapas/linhas, 1°recebe o valor do contador e formata-os em data, 2°extrai minutos e segundos do valor agora em forma de data, 3° escreve o valor no HTML
+
+
+1ª Dentro da função  -mostrarTempo()-  vamos declara uma const  -tempo-  para armazenar o valor do contador no formato de data, passando para a const o atributo -new Date()- e em seu 
+elemento a -let tempoDecorridoEmSegundos- que é o tempo do contador mais uma multiplicação por 1000 já que o valor reconhecido pelo -new Date()- é em milissegundos.
+
+2ª Agora vamos declarar outra const -tempoFormatado- para armazenar  os dados que vamos extrair da const tempo com o metodo -toLocaleTimeString- do -new Date()- utilizando uma 
+formatação no seu elemento para extrairmos somente os minutos e segundos.
+
+3ª utilizamos o metodo  -.innerHTML-  na const da div do contador  -tempoNaTela-  e atribuimos a ela uma templatstring com o valor de -tempoFormatado- que são nossos minutos e
+segundos tratados, escrevendo esse valor na nossa div exibindo-o na tela.
+
+function mostrarTempo() { 
+    const tempo = new Date(tempoDecorridoEmSegundos * 1000)
+    const tempoFormatado = tempo.toLocaleTimeString('pt-Br', {minute: '2-digit', second: '2-digit'})
+    tempoNaTela.innerHTML = `${tempoFormatado}`
+}
+
+
+Para finalisarmos nosso contador precisamos agora trocar o valor de forma dinamica e deixa-lo sempre na tela ja que ele escreve na -div- somente no momento em que a função e chamada.
+Para deixarmos o contador sempre na tela vamos chamar a função no escopo global ou seja fora de outra função para que a função que exibe o tempo seja chamada o tempo todo.
+
+- mostrarTempo() -
+
+
+Agora precisamos trocar o valor do contador - tempoDecorridoEmSegundos - de acordo com o comtexto, para isso dentro dos -addEventListener- dos botões -foco-, -curtoBt- e -longoBt-
+vamos sobreescrever a let -tempoDecorridoEmSegundos- com o valor de contagem de cada contexto, assim sempre que o evento de click que troca o contexto acontecer mudamos tambem o 
+valor do contador.
+
+→ focoBt.addEventListener('click', () => {tempoDecorridoEmSegundos = 1500 })
+→ curtoBt.addEventListener('click', () => {tempoDecorridoEmSegundos = 300 })
+→ longoBt.addEventListener('click', () => {tempoDecorridoEmSegundos = 900 })
+
+
+So precisamos agora chamar a função -mostrarTempo()- sempre que o contexto é alterado para que ela reescreva na div de exbição do contador o valor do contexto selecionado, note 
+que todo -addEventListener- dos botões -foco-, -curtoBt- e -longoBt- chamam a função -alterarContexto()-, então no seu interior passaremos a função -mostrarTempo()-. Com isso
+quando a função mudar o contexto tambem atualiza o valor do contador.
+
+
+
+
+____________________________________________________________________METODOS UTILIZADOS NO CÓDIGO_______________________________________________________________________________
+
+
+-----------------------------------------------------------Declarações de Variaveis var, let e const --------------------------------------------------------------------------         
+
+Em JavaScript, as palavras-chave var, let e const servem para declarar variáveis, mas com características distintas.
+
+var → possui escopo de função ou global e pode ser reatribuída, mas é menos recomendada por ter desvantagens.
+let → tem escopo de bloco e também pode ser reatribuída, mas dentro do seu escopo.
+const → possui escopo de bloco, não pode ser reatribuída e deve ser inicializada na declaração.
+
+Priorize const para valores imutáveis, let para valores que mudam em um escopo específico e evite var.
+
+
+------------------------------------------------------------------------ESTRUTURA SWITHC-------------------------------------------------------------------------------------
+
+Na estrutura -switch- tempos os parenteses onde passamos o  -elemento-  ou  -expressão- , temos tambems as chaves onde possuimos os -case- podemos ter varios cases dentro da switch,
+apos o case entre aspas duplas -"xxx"- o valor que sera comparado com o elemento ou expressão, o codigo a ser executado e função  -break- para encerrar a execução do codgo, e por 
+fim temos tambem o  -default-  que executa caso nenhum case seja executado.
+
+
+switch (expressão) {
+  case valor1:
+    // Código para executar se expressão for igual a valor1
+    [break;]
+  case valor2:
+    // Código para executar se expressão for igual a valor2
+    [break;]
+  // ... mais casos
+  default:
+    // Código para executar se nenhum caso corresponder
+}
+
+--------------------------------------------------------------------------CLASSLIST--------------------------------------------------------------------------------------------------
+O que é classList?
+
+classList é uma propriedade de elementos HTML no JavaScript que oferece uma maneira conveniente e moderna de gerenciar os nomes de classe CSS de um elemento.
+Ele fornece métodos para adicionar, remover, alternar, verificar a presença e manipular classes de uma forma mais simplificada em comparação com as abordagens
+tradicionais de manipulação de strings.
+
+JavaScript
+
+// Pegue uma referência a um elemento
+const meuElemento = document.getElementById("meu-elemento");
+
+// Adicione uma classe
+meuElemento.classList.add("ativo");
+
+// Remova uma classe
+meuElemento.classList.remove("escondido");
+
+// Alterne uma classe (adicione se não estiver presente, remova se estiver presente)
+meuElemento.classList.toggle("destaque");
+
+// Verifique se um elemento possui uma classe
+const temClasseErro = meuElemento.classList.contains("erro");
+
+// Pegue o primeiro nome da classe
+const primeiraClasse = meuElemento.classList.item(0);
+
+// Pegue o número de classes
+const quantidadeClasses = meuElemento.classList.length;
+
+
+
+----------------------------------------------------------------------------CLEARINTERVAL()-------------------------------------------------------------------------------------------
+
+O setInterval() é uma função do JavaScript que roda um trecho de código repetidamente, como um cronômetro. Ele recebe dois argumentos: a função a ser executada e o tempo de intervalo
+entre cada repetição, esse tempo deve ser passado em milissegundos . A cada intervalo, a função é chamada novamente, permitindo criar animações, atualizações em tempo real e outras 
+tarefas que precisam se repetir.
+
+const intervalo = setInterval(mostrarHora, 1000); // Executa mostrarHora a cada segundo
+
+
+Para pararmos a repetição do  -setInterval-  devemos passar o atributo  -clearInterval-  e em seu elemento devemos passar a variavel que armazena o -setInterval-  
+
+clearInterval(intervalo)
+
+-------------------------------------------------------------------------------new Date()--------------------------------------------------------------------------------------------
+
+Para formatação da hora utilizaremos o metodo -new Date()-, para intendermos como o metodo funciona vamos exibir no console os resultados do JavaScripit
+
+Comando são feitos no JavaScripit
+Retorno são mostrados no console
+
+
+Quando passamos o metodo new Date sem nada em seu elemento ele retorna a data atual com dia da semana, mes, dia do mes, ano, hora:minutos:segundos e fuso fuso horario, ouseja a data 
+num contexto completo.
+
+Comando  →  const tempo1 = console.log(new Date()) // Retorno  →  Thu May 09 2024 17:10:51 GMT-0300 (Horário Padrão de Brasília).
+
+
+Entendendo isso podemos ver os varios metodos do -new Date()- para buscar ou acrecentar apenas o que queremos desse tempo completo
+
+Metodo get  →  obtem informações   https://www.w3schools.com/js/js_date_methods.asp
+Metodo set  →  passa informação    https://www.w3schools.com/js/js_date_methods_set.asp
+
+
+Porem quando passamos algum valor dentro do elemento do  -new Date()- ele nos retorna a data -( Wed Dec 31 1969 21:00:00 GMT-0300 (Horário Padrão de Brasília) )- por padrão,
+agora cada valor que passamos dentro do elemento do -new Date()- é acrecentado a data padrão no formato de data, para o -new Date()- todo valor passado representa milissegundos
+assim para adicionarmos 1 segundo a data padrão passada pelo -new Date()- devemos colocar 1000 dentro do seu elemento.
+
+1000 = 1sec  //   60000 = 1min // 3600000 = 1hr  //  86400000 = 1dia  Obs: podemos multiplicar o valor para deminuir suas potencias.
+
+Comando  →  const tempo1 = console.log(new Date(0))     //     Retorno  →  Wed Dec 31 1969 21:00:00 GMT-0300 (Horário Padrão de Brasília)      //    acrecentamos nada
+Comando  →  const tempo1 = console.log(new Date(1000))     //     Retorno  →  Wed Dec 31 1969 21:00:01 GMT-0300 (Horário Padrão de Brasília)     //    acrecentamos 1 sec
+Comando  →  const tempo1 = console.log(new Date(60000))     //     Retorno  →  Wed Dec 31 1969 21:01:00 GMT-0300 (Horário Padrão de Brasília)      //    acrecentamos 1 min
+Comando  →  const tempo1 = console.log(new Date(3600000))     //     Retorno  →  Wed Dec 31 1969 22:00:00 GMT-0300 (Horário Padrão de Brasília)      //    acrecentamos 1 hr
+Comando  →  const tempo1 = console.log(new Date(86400000))     //     Retorno  →   Thu Jan 01 1970 21:00:00 GMT-0300 (Horário Padrão de Brasília)      //    acrecentamos 1 dia
+
+
+Agora que entendemos como o a manipulação dos valores acontece e nos retorna em formato de data, vamos entender o metodo -.toLocaleTimeString()- do -new Date()-.
+
+Ao chamar o metodo ele nos retorna apenas as horas, minutos e segundos, veja o codigo abaixo onde passamos 1500000 dentro do -new Date()- e veremos no console a seguinte resposta:
+
+Comando  →  const tempo1 = console.log(new Date(1500000))     //     Retorno  →  Wed Dec 31 1969 21:25:00 GMT-0300 (Horário Padrão de Brasília) 
+
+
+Agora usaremos o metodo -.toLocaleTimeString()- na const tempo1 e ele nos retornara apenas as horas, minutos e segundos;
+
+Comando  →  console.log(tempo1.toLocaleTimeString())     //     Retorno  →  21:25:00
+
+
+Para finalizar podemos usar essa formatação nos elementos do -.toLocaleTimeString()- para controlar a exibção de horas, minutos e segundos,  passaremo então dois elementos o 
+primeiro se trata de uma string que representa o fuso horario da região, depois entre chaves usamos as formatações abaixo para exibir conforme necessidade horas, minutos e segundos
+
+Comando  →  console.log(tempo1.toLocaleTimeString('pt-Br', {hour:'2-digit',minute: '2-digit', second: '2-digit'}))   //     Retorno  →   21:25:00  //   horas, minutos e segundos
+Comando  →  console.log(tempo1.toLocaleTimeString('pt-Br', {minute: '2-digit', second: '2-digit'}))   //     Retorno  →   25:00  //   minutos e segundos
+Comando  →  console.log(tempo1.toLocaleTimeString('pt-Br', {second: '2-digit'}))   //     Retorno  →  00   //   segundos
